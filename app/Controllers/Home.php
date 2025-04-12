@@ -8,7 +8,18 @@ class Home extends BaseController
     {
         $data = [
             'judul' => 'Home',
+            'menu' => 'home',
             'page' => 'v_home',
+        ];
+        return view('v_template_front', $data);
+    }
+
+    public function profile(): string
+    {
+        $data = [
+            'judul' => 'Profile',
+            'menu' => 'profile',
+            'page' => 'v_profile',
         ];
         return view('v_template_front', $data);
     }

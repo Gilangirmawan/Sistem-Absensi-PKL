@@ -44,15 +44,15 @@
 
     <!-- App Bottom Menu -->
     <div class="appBottomMenu">
-        <a href="#" class="item">
+        <a href="<?= base_url('Home/index') ?>" class="item <?= $menu == 'home' ? 'active' : '' ?>">
             <div class="col">
-                <i class="fas fa-home fa-3x"></i>
+                <i class="fas fa-home fa-3x <?= $menu == 'home' ?  '' : 'text-dark' ?>"></i>
                 <strong>Home</strong>
             </div>
         </a>
-        <a href="#" class="item active">
+        <a href="#" class="item ">
             <div class="col">
-                <i class="fas fa-calendar-alt fa-3x"></i>
+                <i class="fas fa-calendar-alt fa-3x text-dark "></i>
                 <strong>Calendar</strong>
             </div>
         </a>
@@ -65,13 +65,13 @@
         </a>
         <a href="#" class="item">
             <div class="col">
-                <i class="fas fa-file-alt fa-3x"></i>
+                <i class="fas fa-file-alt fa-3x text-dark"></i>
                 <strong>Docs</strong>
             </div>
         </a>
-        <a href="javascript:;" class="item">
+        <a href="<?= base_url('Home/profile') ?>" class="item<?= $menu == 'profile' ? 'active' : '' ?>">
             <div class="col">
-                <i class="fas fa-user-tie fa-3x"></i>
+                <i class="fas fa-user-tie fa-3x <?= $menu == 'profile' ? '' : 'text-dark' ?>"></i>
                 <strong>Profile</strong>
             </div>
         </a>
