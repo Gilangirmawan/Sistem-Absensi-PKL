@@ -1,11 +1,11 @@
 <div class="section bg-primary" id="user-section">
     <div id="user-detail">
         <div class="avatar">
-            <img src="<?= base_url('front') ?>/assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded" />
+            <img src="<?= base_url('foto') ?>/<?= $siswa['foto_siswa'] ?>" alt="avatar" class="imaged w64 rounded" />
         </div>
         <div id="user-info">
-            <h2 id="user-name">Admin Mobile</h2>
-            <span id="user-role">Programmer</span>
+            <h2 id="user-name"><?= $siswa['nama_siswa'] ?></h2>
+            <span id="user-role"><?= $siswa['kelas'] ?></span>
         </div>
     </div>
 </div>
@@ -214,9 +214,11 @@
                             </div>
                         </div>
                     </li>
-
-
                 </ul>
+                
+            </div>
+            <div class="tab-content mt-2" style="margin-bottom: 100px">
+            <a href="<?= base_url('Auth/logOut') ?>" class="btn btn-danger btn-sm btn btn-block"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel">
                 <ul class="listview image-listview">

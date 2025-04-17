@@ -34,6 +34,7 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'filtersiswa'   => \App\Filters\FilterSiswa::class,
     ];
 
     /**
@@ -53,11 +54,13 @@ class Filters extends BaseFilters
         'before' => [
             'forcehttps', // Force Global Secure Requests
             'pagecache',  // Web Page Caching
+            
         ],
         'after' => [
             'pagecache',   // Web Page Caching
             'performance', // Performance Metrics
             'toolbar',     // Debug Toolbar
+            
         ],
     ];
 
@@ -72,10 +75,21 @@ class Filters extends BaseFilters
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
+            'filtersiswa'=> [
+                'except' => [
+                    '/',
+                    'Auth', 'Auth/*',
+                ]
+            ]
         ],
         'after' => [
             // 'honeypot',
             // 'secureheaders',
+            'filtersiswa'=> [
+                'except' => [
+                    'Home', 'Home/*',
+                ]
+            ]
         ],
     ];
 
