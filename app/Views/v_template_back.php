@@ -18,6 +18,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="<?= base_url('back') ?>/dist/css/adminlte.min.css">
 </head>
 <body class="hold-transition sidebar-mini">
+<?php
+    $db = \Config\Database::connect();
+
+    $user = $db->table('tbl_user')->where('id_user', session()->get('id_user'))->get()->getRowArray();
+    ?>
 <div class="wrapper">
 
   <!-- Navbar -->
@@ -65,10 +70,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="<?= base_url('back') ?>/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="<?= base_url('foto') ?>/<?= $user['foto_user'] ?>" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block"><?= $user['nama_user'] ?></a>
         </div>
       </div>
 

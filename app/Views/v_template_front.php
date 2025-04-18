@@ -25,6 +25,7 @@
 </head>
 
 <body style="background-color: #e9ecef">
+    
     <!-- loader -->
     <div id="loader">
         <div class="spinner-border text-primary" role="status"></div>

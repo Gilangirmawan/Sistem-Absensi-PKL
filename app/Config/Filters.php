@@ -35,6 +35,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'filtersiswa'   => \App\Filters\FilterSiswa::class,
+        'filteruser'   => \App\Filters\FilterUser::class,
     ];
 
     /**
@@ -78,6 +79,14 @@ class Filters extends BaseFilters
             'filtersiswa'=> [
                 'except' => [
                     '/',
+                    '/loginAdmin',
+                    'Auth', 'Auth/*',
+                ]
+                ],
+                'filteruser'=> [
+                'except' => [
+                    '/',
+                    '/loginAdmin',
                     'Auth', 'Auth/*',
                 ]
             ]
@@ -88,6 +97,11 @@ class Filters extends BaseFilters
             'filtersiswa'=> [
                 'except' => [
                     'Home', 'Home/*',
+                ]
+                ],
+                'filteruser'=> [
+                'except' => [
+                    'Admin', 'Admin/*',
                 ]
             ]
         ],
