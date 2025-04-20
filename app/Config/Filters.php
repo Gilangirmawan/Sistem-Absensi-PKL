@@ -97,6 +97,7 @@ class Filters extends BaseFilters
             'filtersiswa'=> [
                 'except' => [
                     'Home', 'Home/*',
+                    'Presensi', 'Presensi/*',
                 ]
                 ],
                 'filteruser'=> [
