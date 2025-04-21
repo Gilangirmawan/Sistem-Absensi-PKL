@@ -57,10 +57,10 @@
                 <strong>Calendar</strong>
             </div>
         </a>
-        <a href="#" class="item">
+        <a href="<?= base_url('Presensi') ?>" class="item">
             <div class="col">
                 <div class="action-button large">
-                    <i class="fas fa-camera text-white fa-3x"></i>
+                    <i class="fas fa-camera text-white fa-3x <?= $menu == 'presensi' ?  'text-danger' : '' ?>"></i>
                 </div>
             </div>
         </a>
