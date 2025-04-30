@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 19, 2025 at 05:26 PM
+-- Generation Time: Apr 30, 2025 at 07:52 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -67,15 +67,16 @@ CREATE TABLE `tbl_setting` (
   `id_setting` int NOT NULL,
   `nama_sekolah` varchar(100) NOT NULL,
   `alamat` text NOT NULL,
-  `lokasi_sekolah` varchar(255) NOT NULL
+  `lokasi_sekolah` varchar(255) NOT NULL,
+  `radius` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tbl_setting`
 --
 
-INSERT INTO `tbl_setting` (`id_setting`, `nama_sekolah`, `alamat`, `lokasi_sekolah`) VALUES
-(1, 'SMANSI', 'Sirampog,Gunung Kembang', '-7.205413846049455, 109.05906177228712');
+INSERT INTO `tbl_setting` (`id_setting`, `nama_sekolah`, `alamat`, `lokasi_sekolah`, `radius`) VALUES
+(1, 'STM TADIKA MESRA', 'Bumiayu', '-7.281809831268037, 109.02503523974217', 100);
 
 -- --------------------------------------------------------
 
@@ -169,7 +170,7 @@ ALTER TABLE `tbl_kelas`
 -- AUTO_INCREMENT for table `tbl_presensi`
 --
 ALTER TABLE `tbl_presensi`
-  MODIFY `id_presensi` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_presensi` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_siswa`
