@@ -22,6 +22,7 @@ class Presensi extends BaseController
                 'judul' => 'Absen Masuk',
                 'menu' => 'presensi',
                 'page' => 'presensi/v_absen_masuk',
+                'sekolah' => $this->ModelPresensi->dataSekolah(),
                 
             ];
             return view('v_template_front', $data);
@@ -31,6 +32,7 @@ class Presensi extends BaseController
                 'judul' => 'Absen Pulang',
                 'menu' => 'presensi',
                 'page' => 'presensi/v_absen_pulang',
+                'sekolah' => $this->ModelPresensi->dataSekolah(),
                 
             ];
             return view('v_template_front', $data);

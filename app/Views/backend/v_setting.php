@@ -33,10 +33,20 @@
                     <input name="alamat" value="<?= $setting['alamat'] ?>" class="form-control" placeholder="Alamat" required>
                   </div>
 
+                 <div class="row">
+                  <div class="col-sm-6">
                   <div class="form-group">
                     <label>Lokasi Sekolah</label>
                     <input name="lokasi_sekolah" value="<?= $setting['lokasi_sekolah'] ?>" class="form-control" placeholder="Lokasi Sekolah" required>
                   </div>
+                  </div>
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Radius(*Meter)</label>
+                    <input name="radius" value="<?= $setting['radius'] ?>" class="form-control" type="number">
+                  </div>
+                  </div>
+                 </div>
 
                     <div id="map" style="width: 100%; height: 300px;"></div>
 
@@ -69,6 +79,6 @@
                      color: 'blue',
                      fillColor: '#0000FF',
                      fillOpacity: 0.5,
-                     radius: 500
+                     radius: <?= $setting['radius'] ?>, // radius dalam meter
                     }).addTo(map);
         </script>
