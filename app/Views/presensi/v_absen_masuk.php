@@ -1,4 +1,5 @@
-  <!-- App Header -->
+ 
+ <!-- App Header -->
   <div class="appHeader bg-primary text-light">
       <div class="left">
           <a href="<?= base_url('Home') ?>" class="headerButton goBack">
@@ -24,7 +25,9 @@
         }
     </style>
     <div class="my_camera"></div>
-    <button class="btn btn-primary btn-block"><i class="fas fa-camera-retro"></i>Absen masuk</button>
+    <button id="btnAbsenMasuk" class="btn btn-primary btn-block">
+    <i class="fas fa-camera-retro"></i> Absen Masuk
+</button>
     <input type="hidden" name="lokasi" id="lokasi"> 
     <div id="map" style="width: 100%; height: 400px;"></div>
 </div>
@@ -84,5 +87,34 @@ L.marker([<?=$sekolah['lokasi_sekolah']?>],{
 
 
 }
+
+document.getElementById("btnAbsenMasuk").addEventListener("click", function() {
+    Webcam.snap(function(data_uri) {
+        var lokasi = document.getElementById("lokasi").value;
+
+        // Kirim ke backend
+        fetch("<?= base_url('presensi/absenMasuk') ?>", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "<?= csrf_hash() ?>"
+            },
+            body: JSON.stringify({
+                foto: data_uri,
+                lokasi: lokasi
+            })
+        })
+        .then(res => res.json())
+        .then(response => {
+    alert(response.message);
+    if (response.message === 'Absen masuk berhasil!') {
+        // Redirect ke halaman index presensi (akan otomatis buka absen pulang)
+        window.location.href = "<?= base_url('presensi') ?>";
+    }
+})
+
+        .catch(err => console.error(err));
+    });
+});
 
 </script>

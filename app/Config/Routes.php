@@ -33,6 +33,7 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Auth::index');
 $routes->get('/loginAdmin', 'Auth::loginAdmin');
 
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
