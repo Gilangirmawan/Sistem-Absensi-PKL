@@ -20,7 +20,106 @@
 
 </head>
 
-<body class="bg-white">
+ <style>
+        body {
+            background: linear-gradient(135deg,rgb(60, 115, 198), #2980b9);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 10px 40px;
+            width: 100%;
+            max-width: 500px; /* Diperbesar di desktop */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login-card img.form-image {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        .login-card h1 {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .login-card h4 {
+            font-size: 0.95rem;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-control {
+            border-radius: 50px;
+            padding-left: 45px;
+            height: 45px;
+            font-size: 0.9rem;
+        }
+
+        .form-group .fa {
+            position: absolute;
+            left: 15px;
+            top: 13px;
+            color: #aaa;
+        }
+
+        .form-button-group {
+            margin-top: 20px;
+        }
+
+        .form-button-group button {
+            border-radius: 50px;
+            width: 100%;
+            height: 45px;
+            font-weight: 500;
+            background-color: #4d9eff;
+            color: white;
+            border: none;
+            transition: 0.3s ease-in-out;
+        }
+
+        .form-button-group button:hover {
+            background-color: #347ddc;
+        }
+
+        .form-links {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .text-danger {
+            font-size: 0.8rem;
+            text-align: left;
+        }
+
+        @media (max-width: 576px) {
+            .login-card {
+                padding: 30px 20px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<!-- ... head tetap sama seperti punyamu sebelumnya ... -->
+
+<body>
 
     <!-- loader -->
     <div id="loader">
@@ -28,82 +127,63 @@
     </div>
     <!-- * loader -->
 
-
     <!-- App Capsule -->
     <div id="appCapsule" class="pt-0">
+        <div class="login-card">
 
-        <div class="login-form mt-1">
-            <div class="section">
-                <img src="<?= base_url('login.png') ?>" alt="image" class="form-image">
-            </div>
-            <div class="section mt-1">
-                <h1>E-Absensi</h1>
-                <h4>Silahkan Login Terlebih Dahulu.</h4>
-            </div>
-            <div class="section mt-1 mb-5">
-                <!-- Pesan Error -->
-                <?php
-                $errors = validation_errors();
+            <img src="<?= base_url('login.png') ?>" alt="Login Image" class="form-image">
 
-                if (session()->get('pesan')) {
-                    echo '<div class="alert alert-danger">';
-                    echo session()->get('pesan');
-                    echo '</div>';
-                }
-                ?>
-                <?php echo form_open('Auth/cekLoginSiswa') ?>
-                    <div class="form-group boxed">
-                        <div class="input-wrapper">
-                            <input name="username" class="form-control" placeholder="Username">
-                            <i class="fas fa-times-circle clear-input"></i>
-                        </div>
-                        <p class="text text-danger"><?= isset($errors['username'])==isset($errors['username']) ? validation_show_error('username') : '' ?></p>
-                    </div>
+            <h1>E-Absensi</h1>
+            <h4>Silahkan Login Terlebih Dahulu.</h4>
 
-                    <div class="form-group boxed">
-                        <div class="input-wrapper">
-                            <input name="password" type="password" class="form-control" placeholder="Password">
-                            <i class="fas fa-times-circle clear-input"></i>
-                        </div>
-                        <p class="text text-danger"><?= isset($errors['password'])==isset($errors['password']) ? validation_show_error('password') : '' ?></p>
-                    </div>
+            <!-- Pesan Error -->
+            <?php
+            $errors = validation_errors();
+            if (session()->get('pesan')) {
+                echo '<div class="alert alert-danger mt-3">';
+                echo session()->get('pesan');
+                echo '</div>';
+            }
+            ?>
 
-                    <div class="form-links mt-2">
-                        <div>
-                            <a href="page-register.html">Register Now</a>
-                        </div>
-                        <div><a href="page-forgot-password.html" class="text-muted">Forgot Password?</a></div>
-                    </div>
+            <!-- Form Login -->
+            <?php echo form_open('Auth/cekLoginSiswa') ?>
 
-                    <div class="form-button-group">
-                        <button type="submit" class="btn btn-primary btn-block btn-lg">Log in</button>
-                    </div>
+                <div class="form-group">
+                    <i class="fa fa-user"></i>
+                    <input name="username" class="form-control" placeholder="Username">
+                    <p class="text text-danger"><?= isset($errors['username']) ? validation_show_error('username') : '' ?></p>
+                </div>
 
-                <?php echo form_close() ?>
-            </div>
+                <div class="form-group">
+                    <i class="fa fa-lock"></i>
+                    <input name="password" type="password" class="form-control" placeholder="Password">
+                    <p class="text text-danger"><?= isset($errors['password']) ? validation_show_error('password') : '' ?></p>
+                </div>
+
+                <div class="form-links">
+                    <a href="page-register.html">Register Now</a>
+                    <a href="page-forgot-password.html" class="text-muted">Forgot Password?</a>
+                </div>
+
+                <div class="form-group form-button-group">
+                    <button type="submit">LOGIN</button>
+                </div>
+
+            <?php echo form_close() ?>
         </div>
-
-
     </div>
     <!-- * App Capsule -->
 
-
-
-    <!-- ///////////// Js Files ////////////////////  -->
-    <!-- Jquery -->
+    <!-- JS tetap -->
     <script src="<?= base_url('front') ?>/assets/js/lib/jquery-3.4.1.min.js"></script>
-    <!-- Bootstrap-->
     <script src="<?= base_url('front') ?>/assets/js/lib/popper.min.js"></script>
     <script src="<?= base_url('front') ?>/assets/js/lib/bootstrap.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
-    <!-- Owl Carousel -->
     <script src="<?= base_url('front') ?>/assets/js/plugins/owl-carousel/owl.carousel.min.js"></script>
-    <!-- jQuery Circle Progress -->
     <script src="<?= base_url('front') ?>/assets/js/plugins/jquery-circle-progress/circle-progress.min.js"></script>
-    <!-- Base Js File -->
     <script src="<?= base_url('front') ?>/assets/js/base.js"></script>
 
-
 </body>
+
 
 </html>
