@@ -1,120 +1,82 @@
- 
- <!-- App Header -->
- <div class="appHeader bg-primary text-light">
-      <div class="left">
-          <a href="<?= base_url('Home') ?>" class="headerButton goBack">
-              <i class="fas fa-arrow-left fa-2x"></i>
-          </a>
-      </div>
-      <div class="pageTitle"><?= $judul ?></div>
-      <div class="right"></div>
-  </div>
-  <!-- * App Header -->
-
+<!-- App Header -->
+<div class="appHeader bg-primary text-light">
+    <div class="left">
+        <a href="<?= base_url('Home') ?>" class="headerButton goBack">
+            <i class="fas fa-arrow-left fa-2x"></i>
+        </a>
+    </div>
+    <div class="pageTitle"><?= $judul ?></div>
+    <div class="right"></div>
+</div>
+<!-- * App Header -->
 
 <div class="row" style="margin-top: 70px;">
-    <div class="col"></div>
-    <style>
-        .my_camera, 
-        .my_camera video {
-            display: inline-block;
-            width: 100% !important;
-            margin: auto;
-            height: auto !important;
-            border-radius: 15px;
-        }
-    </style>
-    <div class="my_camera"></div>
-    <button id="btnAbsenPulang" class="btn btn-primary btn-block">
-    <i class="fas fa-camera-retro"></i> Absen Pulang
-</button>
-    <input type="hidden" name="lokasi" id="lokasi"> 
-    <div id="map" style="width: 100%; height: 400px;"></div>
+    <div class="col">
+
+        <style>
+            .my_camera,
+            .my_camera video {
+                display: inline-block;
+                width: 100% !important;
+                margin: auto;
+                height: auto !important;
+                border-radius: 15px;
+            }
+        </style>
+
+        <!-- Form untuk submit absen -->
+        <form method="post" action="<?= base_url('Presensi/absenPulang') ?>">
+            <div class="my_camera"></div>
+            <input type="hidden" name="lokasi" id="lokasi">
+            <input type="hidden" name="image" id="image">
+
+            <button type="button" id="btnAbsenPulang" class="btn btn-primary btn-block mt-2">
+                <i class="fas fa-camera-retro"></i> Absen Pulang
+            </button>
+        </form>
+
+        <div id="map" style="width: 100%; height: 400px;" class="mt-3"></div>
+    </div>
 </div>
 
-
-
-
+<!-- Webcam & Lokasi -->
 <script>
+    // Set webcam
     Webcam.set({
-    width: 420,
-    height: 320,
-    image_format: 'jpeg',
-    jpeg_quality: 90,
+        width: 420,
+        height: 320,
+        image_format: 'jpeg',
+        jpeg_quality: 90,
     });
-    Webcam.attach( '.my_camera' );
+    Webcam.attach('.my_camera');
 
+    // Tangkap lokasi
     if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(showPosition);
-} else {
-    // Browser tidak support Geolocation
-  alert("Geolocation is not supported by this browser.");
-}
-
-function showPosition(position) {
-    var x = document.getElementById("lokasi");
-  x.value =  position.coords.latitude + "," + position.coords.longitude;
-  
-  // menampilkan map dan posisi siswa
-  var map = L.map('map').setView([position.coords.latitude , position.coords.longitude], 19);
-
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
-L.marker([position.coords.latitude , position.coords.longitude]).addTo(map)
-// Radius Sekolah
-var circle = L.circle([<?=$sekolah['lokasi_sekolah']?>], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: <?=$sekolah['radius']?> // radius dalam meter
-}).addTo(map);
-
-// Posisi Sekolah
-
-var sekolahIcon = L.icon({
-    iconUrl: '<?= base_url('/sekolah.png') ?>',
-
-    iconSize:     [38, 95], // size of the icon
-    shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-});
-L.marker([<?=$sekolah['lokasi_sekolah']?>],{
-    icon: sekolahIcon
-}).addTo(map).bindPopup('<?= $sekolah['nama_sekolah'] ?>').openPopup();
-
-
-}
-
-document.getElementById("btnAbsenPulang").addEventListener("click", function() {
-    Webcam.snap(function(data_uri) {
-        var lokasi = document.getElementById("lokasi").value;
-
-        // Kirim ke backend
-        fetch("<?= base_url('presensi/absenPulang') ?>", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "<?= csrf_hash() ?>"
-            },
-            body: JSON.stringify({
-                foto: data_uri,
-                lokasi: lokasi
-            })
-        })
-        .then(res => res.json())
-        .then(response => {
-    alert(response.message);
-    if (response.message === 'Absen pulang berhasil!') {
-        // Redirect ke halaman index presensi (akan otomatis buka absen pulang)
-        window.location.href = "<?= base_url('Home') ?>";
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        alert("Geolocation is not supported by this browser.");
     }
-})
 
-        .catch(err => console.error(err));
+    function showPosition(position) {
+        let lokasiInput = document.getElementById("lokasi");
+        lokasiInput.value = position.coords.latitude + "," + position.coords.longitude;
+
+        // Tampilkan peta
+        let map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 19);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+    }
+
+    // Tombol absen: capture webcam + submit
+    document.getElementById('btnAbsenPulang').addEventListener('click', function () {
+        Webcam.snap(function (data_uri) {
+            document.getElementById('image').value = data_uri;
+            // Submit form
+            document.querySelector('form').submit();
+        });
     });
-});
-
 </script>

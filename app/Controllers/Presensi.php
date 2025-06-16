@@ -5,120 +5,146 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\ModelPresensi;
 
-
 class Presensi extends BaseController
 {
+    protected $presensiModel;
+
     public function __construct()
     {
-        $this->ModelPresensi = new ModelPresensi();
+        $this->presensiModel = new ModelPresensi();
     }
 
     public function index()
     {
-        $presensi = $this->ModelPresensi->cekPresensi();
-        if ( $presensi == null) {
-            //Buka Absen Masuk
+        $id_siswa = session()->get('id_siswa');
+        $tanggalHariIni = date('Y-m-d');
+
+        // Cek apakah siswa sudah absen hari ini
+        $sudahAbsen = $this->presensiModel
+            ->where('id_siswa', $id_siswa)
+            ->where('tgl_presensi', $tanggalHariIni)
+            ->first();
+
+        if (!$sudahAbsen) {
+            // Belum absen, tampilkan form absen masuk
             $data = [
-                'judul' => 'Absen Masuk',
-                'menu' => 'presensi',
-                'page' => 'presensi/v_absen_masuk',
-                'sekolah' => $this->ModelPresensi->dataSekolah(),
-                
+                'judul'   => 'Absen Masuk',
+                'menu'    => 'presensi',
+                'page'    => 'presensi/v_absen_masuk',
+                'sekolah' => $this->presensiModel->dataSekolah()
             ];
-            return view('v_template_front', $data);
-        }else {
-            //Buka Absen Pulang
+        } elseif ($sudahAbsen && $sudahAbsen['jam_out'] == null) {
+            // Sudah absen masuk tapi belum absen pulang
             $data = [
-                'judul' => 'Absen Pulang',
-                'menu' => 'presensi',
-                'page' => 'presensi/v_absen_pulang',
-                'sekolah' => $this->ModelPresensi->dataSekolah(),
-                
+                'judul'   => 'Absen Pulang',
+                'menu'    => 'presensi',
+                'page'    => 'presensi/v_absen_pulang',
+                'sekolah' => $this->presensiModel->dataSekolah()
             ];
-            return view('v_template_front', $data);
+        } else {
+            // Sudah absen masuk dan sudah absen pulang
+            $data = [
+                'judul'   => 'Sudah Absen',
+                'menu'    => 'presensi',
+                'page'    => 'presensi/v_sudah_absen',
+                'sekolah' => $this->presensiModel->dataSekolah()
+            ];
         }
+
+        return view('v_template_front', $data);
     }
 
     public function absenMasuk()
-{
-    $siswaId = session()->get('id_siswa');
-    $request = $this->request->getJSON();
-    
-    $lokasi = $request->lokasi;
-    $fotoBase64 = $request->foto;
-    $tanggal = date('Y-m-d');
-    $jam = date('H:i:s');
+    {
+        $id_siswa = session()->get('id_siswa');
+        $tanggalHariIni = date('Y-m-d');
 
-    $presensiModel = new \App\Models\ModelPresensi();
+        // Cek apakah siswa sudah absen hari ini
+        $sudahAbsen = $this->presensiModel
+            ->where('id_siswa', $id_siswa)
+            ->where('tgl_presensi', $tanggalHariIni)
+            ->first();
 
-    // Cek apakah sudah absen masuk
-    $sudahAbsen = $presensiModel->where('id_siswa', $siswaId)
-        ->where('tgl_presensi', $tanggal)
-        ->first();
+        if ($sudahAbsen) {
+            // Sudah absen, tampilkan halaman 'sudah absen'
+            $data = [
+                'judul'   => 'Sudah Absen',
+                'menu'    => 'presensi',
+                'page'    => 'presensi/v_sudah_absen',
+                'sekolah' => $this->presensiModel->dataSekolah()
+            ];
+            return view('v_template_front', $data);
+        }
 
-    if ($sudahAbsen) {
-        return $this->response->setJSON(['message' => 'Anda sudah absen masuk hari ini.']);
+        // Tangkap data dari form
+        $lokasi = $this->request->getPost('lokasi');
+        $foto   = $this->request->getPost('image');
+
+        // Simpan presensi masuk
+        $this->presensiModel->insert([
+            'id_siswa'     => $id_siswa,
+            'tgl_presensi' => $tanggalHariIni,
+            'jam_in'       => date('H:i:s'),
+            'lokasi_in'    => $lokasi,
+            'foto_in'      => $foto
+        ]);
+
+        // Tampilkan halaman konfirmasi sudah absen
+        $data = [
+            'judul'   => 'Presensi Masuk Berhasil',
+            'menu'    => 'presensi',
+            'page'    => 'presensi/v_sudah_absen',
+            'sekolah' => $this->presensiModel->dataSekolah()
+        ];
+        return view('v_template_front', $data);
     }
 
-    // Simpan foto ke file
-    $fotoName = 'in_' . $siswaId . '_' . time() . '.jpg';
-    $fotoPath = WRITEPATH . 'uploads/' . $fotoName;
-    $data = explode(',', $fotoBase64);
-    file_put_contents($fotoPath, base64_decode(end($data)));
+    public function absenPulang()
+{
+    $id_siswa = session()->get('id_siswa');
+    $tanggalHariIni = date('Y-m-d');
+    $presensiModel = new ModelPresensi();
 
-    // Simpan ke database
-    $presensiModel->insert([
-        'id_siswa' => $siswaId,
-        'tgl_presensi' => $tanggal,
-        'jam_in' => $jam,
-        'lokasi_in' => $lokasi,
-        'foto_in' => $fotoName
+    // Ambil data presensi hari ini
+    $presensiHariIni = $presensiModel->where('id_siswa', $id_siswa)
+                                      ->where('tgl_presensi', $tanggalHariIni)
+                                      ->first();
+
+    if (!$presensiHariIni) {
+        // Jika belum absen masuk, redirect ke halaman absen masuk
+        return redirect()->to(base_url('Presensi'));
+    }
+
+    if (!empty($presensiHariIni['jam_out'])) {
+        // Jika sudah absen pulang
+        $data = [
+            'judul' => 'Sudah Absen Pulang',
+            'menu' => 'presensi',
+            'page' => 'presensi/v_sudah_absen',
+            'sekolah' => $presensiModel->dataSekolah()
+        ];
+        return view('v_template_front', $data);
+    }
+
+    // Tangkap data dari form
+    $lokasi = $this->request->getPost('lokasi');
+    $foto = $this->request->getPost('image');
+
+    // Update presensi dengan data pulang
+    $presensiModel->update($presensiHariIni['id_presensi'], [
+        'jam_out'     => date('H:i:s'),
+        'lokasi_out'  => $lokasi,
+        'foto_out'    => $foto
     ]);
 
-    return $this->response->setJSON(['message' => 'Absen masuk berhasil!']);
+    // Tampilkan konfirmasi sudah absen pulang
+    $data = [
+        'judul' => 'Presensi Pulang Berhasil',
+        'menu' => 'presensi',
+        'page' => 'presensi/v_sudah_absen',
+        'sekolah' => $presensiModel->dataSekolah()
+    ];
+    return view('v_template_front', $data);
 }
-
-public function absenPulang()
-{
-    $siswaId = session()->get('id_siswa');
-    $request = $this->request->getJSON();
-
-    $lokasi = $request->lokasi;
-    $fotoBase64 = $request->foto;
-    $tanggal = date('Y-m-d');
-    $jam = date('H:i:s');
-
-    $presensiModel = new \App\Models\ModelPresensi();
-
-    // Cari data presensi masuk hari ini
-    $presensi = $presensiModel->where('id_siswa', $siswaId)
-        ->where('tgl_presensi', $tanggal)
-        ->first();
-
-    if (!$presensi) {
-        return $this->response->setJSON(['message' => 'Anda belum absen masuk hari ini.']);
-    }
-
-    if ($presensi['jam_out'] != null && $presensi['jam_out'] != '00:00:00') {
-        return $this->response->setJSON(['message' => 'Anda sudah absen pulang hari ini.']);
-    }
-    
-
-    // Simpan foto pulang
-    $fotoName = 'out_' . $siswaId . '_' . time() . '.jpg';
-    $fotoPath = WRITEPATH . 'uploads/' . $fotoName;
-    $data = explode(',', $fotoBase64);
-    file_put_contents($fotoPath, base64_decode(end($data)));
-
-    // Update presensi
-    $presensiModel->update($presensi['id_presensi'], [
-        'jam_out' => $jam,
-        'lokasi_out' => $lokasi,
-        'foto_out' => $fotoName
-    ]);
-
-    return $this->response->setJSON(['message' => 'Absen pulang berhasil!']);
-}
-
 
 }
