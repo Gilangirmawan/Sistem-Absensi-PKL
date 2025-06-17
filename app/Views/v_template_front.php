@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#000000" />
-    <title>Mobilekit Mobile UI Kit</title>
+    <title><?= $judul ?></title>
     <meta name="description" content="Mobilekit HTML Mobile UI Kit" />
     <meta name="keywords" content="bootstrap 4, mobile template, cordova, phonegap, mobile, html" />
     <link rel="icon" type="image/png" href="<?= base_url('front') ?>/assets/img/favicon.png" sizes="32x32" />
@@ -75,7 +75,7 @@
                 <strong>Docs</strong>
             </div>
         </a>
-        <a href="<?= base_url('Home/profile') ?>" class="item<?= $menu == 'profile' ? 'active' : '' ?>">
+        <a href="<?= base_url('Home/profile') ?>" class="item <?= $menu == 'profile' ? 'active' : '' ?>">
             <div class="col">
                 <i class="fas fa-user-tie fa-3x <?= $menu == 'profile' ? '' : 'text-dark' ?>"></i>
                 <strong>Profile</strong>

@@ -1,5 +1,5 @@
 <div class="section bg-primary" id="user-section">
-<div class="px-2 "><marquee class="py-3"><h1 class="text-light">HIDUP JOKOWI !!! HIDUP JOKOWI !!! HIDUP JOKOWI !!!</h1></marquee></div>
+<div class="px-2 "><marquee class="py-3"><h1 class="text-light ">HIDUP JOKOWI !!! HIDUP JOKOWI !!! HIDUP JOKOWI !!!</h1></marquee></div>
 </div>
 
 <div class="section" id="menu-section">
@@ -21,11 +21,11 @@
 
     <div class="rekappresence mt-1">
         <div class="col">
-            <canvas id="myChart" style="min-height: 460px; height: 460px; max-height: 460px; max-width: 100%;"></canvas>
+            <canvas id="myChart" style="min-height: 200px; height: 200px; max-height: 200px; max-width: 100%;"></canvas>
         </div>
     </div>
 
-    <div class="rekappresence mt-1">
+    <div class="rekappresence mt-2">
 
         <div class="row">
             <div class="col-6">
@@ -83,7 +83,7 @@
                                 <i class="fa fa-clock"></i>
                             </div>
                             <div class="presencedetail">
-                                <h4 class="rekappresencetitle">Terlambat</h4>
+                                <h4 class="rekappresencetitle">Tanpa Keterangan</h4>
                                 <span class="rekappresencedetail">0 Hari</span>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
     <div class="presencetab mt-2">
         <div class="tab-content mt-2" style="margin-bottom: 100px">
             <div class="tab-content mt-2" style="margin-bottom: 100px">
-            <a href="<?= base_url('Auth/logOut') ?>" class="btn btn-danger btn-sm btn btn-block"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <a href="<?= base_url('Auth/logOut') ?>" class="btn btn-danger btn-lg btn btn-block"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div> 
         </div>
     </div>
