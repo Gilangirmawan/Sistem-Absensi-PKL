@@ -90,8 +90,6 @@
     <!-- Bootstrap-->
     <script src="<?= base_url('front') ?>/assets/js/lib/popper.min.js"></script>
     <script src="<?= base_url('front') ?>/assets/js/lib/bootstrap.min.js"></script>
-    <!-- Chart JS -->
-    <script src="<?= base_url('front') ?>/assets/chart/dist/chart.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     <!-- Owl Carousel -->
     <script src="<?= base_url('front') ?>/assets/js/plugins/owl-carousel/owl.carousel.min.js"></script>
@@ -101,21 +99,6 @@
     <!-- Base Js File -->
     <script src="<?= base_url('front') ?>/assets/js/base.js"></script>
 
-    <script>
-        const ctx = document.getElementById('myChart');
-
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            }
-        });
-    </script>
 </body>
 
 </html>

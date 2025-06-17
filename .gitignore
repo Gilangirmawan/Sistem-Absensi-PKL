@@ -1,0 +1,49 @@
+# Composer dependencies
+/vendor/
+
+# Environment file (jika pakai konfigurasi lokal)
+.env
+.env.*
+
+# Node modules (jika pakai frontend tools)
+node_modules/
+
+# System logs and cache
+writable/cache/
+writable/debugbar/
+writable/logs/
+writable/session/
+writable/uploads/
+writable/tmp/
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# PHPUnit test results
+.phpunit.result.cache
+
+# Build and deployment files (optional)
+build/
+dist/
+
+# Backup files
+*.bak
+*.tmp
+*.swp
+*~
+
+# Database dump or sensitive exports (jika ada)
+*.sql
+*.sqlite
+*.db
+
+# User uploads (optional: jika tidak ingin commit hasil upload)
+/public/uploads/
+/public/foto/
