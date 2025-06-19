@@ -56,9 +56,9 @@
                 <strong>Home</strong>
             </div>
         </a>
-        <a href="#" class="item ">
+        <a href="<?= base_url('Home/kalender') ?>" class="item <?= $menu == 'kalender' ? 'active' : '' ?>">
             <div class="col">
-                <i class="fas fa-calendar-alt fa-3x text-dark "></i>
+                <i class="fas fa-calendar-alt fa-3x <?= $menu == 'kalender' ?  '' : 'text-dark' ?>"></i>
                 <strong>Calendar</strong>
             </div>
         </a>

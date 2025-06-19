@@ -47,4 +47,15 @@ class Home extends BaseController
 
         return redirect()->to(base_url('Home/profile'))->with('success', 'Profile updated successfully.');
     }
+
+    public function kalender(): string
+    {
+        $data = [
+            'judul' => 'Kalender',
+            'menu' => 'kalender',
+            'page' => 'v_calendar',
+            'siswa' => $this->ModelHome->dataSiswa(),
+        ];
+        return view('v_template_front', $data);
+    }
 }
