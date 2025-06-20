@@ -30,27 +30,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
-    </ul>
-
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
 
-      <li class="nav-item">
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-          <i class="fas fa-expand-arrows-alt"></i>
-        </a>
-      </li>
       <li class="nav-item">
         <a class="nav-link" href="<?= base_url('Auth/logOut') ?>">
           <i class="fas fa-sign-out-alt"></i> Logout
@@ -97,21 +79,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                Starter Pages
+                Manajemen Data
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="<?= base_url('Admin/siswa') ?>" class="nav-link active">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Active Page</p>
+                  <p>Manajemen Siswa</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Inactive Page</p>
+                  <p>Manajemen Kelas</p>
                 </a>
               </li>
             </ul>
@@ -125,16 +107,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
-
-          <li class="nav-item">
-            <a href="<?=base_url('Admin/setting')?>" class="nav-link">
-              <i class="nav-icon fas fa-cogs"></i>
-              <p>
-                Setting
-              </p>
-            </a>
-          </li>
-
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -152,10 +124,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <h1 class="m-0"><?= $judul ?> </h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
+            <!-- <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">Starter Page</li>
-            </ol>
+            </ol> -->
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -179,18 +151,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-      Anything you want
-    </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
-</div>
-<!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
 

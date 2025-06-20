@@ -18,7 +18,7 @@
         </div>
 
         <div class="card-body d-flex justify-content-center">
-            <div id="calendar" style="width: 80%; height:auto;"></div>
+            <div id="calendar" style="width: 90%; height:auto;"></div>
         </div>
 
         <!-- Keterangan warna -->
