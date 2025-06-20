@@ -13,7 +13,6 @@ writable/cache/
 writable/debugbar/
 writable/logs/
 writable/session/
-writable/uploads/
 writable/tmp/
 
 # IDE/editor folders
@@ -45,5 +44,3 @@ dist/
 *.db
 
 # User uploads (optional: jika tidak ingin commit hasil upload)
-/public/uploads/
-/public/foto/

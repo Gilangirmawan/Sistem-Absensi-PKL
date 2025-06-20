@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 30, 2025 at 07:52 PM
+-- Generation Time: Jun 20, 2025 at 01:42 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -50,12 +50,21 @@ CREATE TABLE `tbl_presensi` (
   `id_siswa` int NOT NULL,
   `tgl_presensi` date NOT NULL,
   `jam_in` time NOT NULL,
-  `jam_out` time NOT NULL,
+  `jam_out` time DEFAULT NULL,
   `lokasi_in` varchar(255) NOT NULL,
-  `lokasi_out` varchar(255) NOT NULL,
+  `lokasi_out` varchar(255) DEFAULT NULL,
   `foto_in` varchar(100) NOT NULL,
-  `foto_out` varchar(100) NOT NULL
+  `foto_out` varchar(100) DEFAULT NULL,
+  `keterangan` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tbl_presensi`
+--
+
+INSERT INTO `tbl_presensi` (`id_presensi`, `id_siswa`, `tgl_presensi`, `jam_in`, `jam_out`, `lokasi_in`, `lokasi_out`, `foto_in`, `foto_out`, `keterangan`) VALUES
+(23, 1, '2025-06-16', '11:52:08', '11:58:00', '-7.2459424,109.0074295', '-7.2459772,109.0074299', 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCI', 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCI', NULL),
+(24, 1, '2025-06-20', '19:31:42', '19:31:50', '-7.2459667,109.0074229', '-7.2459667,109.0074229', 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCI', 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCI', NULL);
 
 -- --------------------------------------------------------
 
@@ -99,7 +108,7 @@ CREATE TABLE `tbl_siswa` (
 --
 
 INSERT INTO `tbl_siswa` (`id_siswa`, `nis`, `nama_siswa`, `id_kelas`, `username`, `password`, `foto_siswa`) VALUES
-(1, '12345', 'Asep Kopling', 1, 'asep', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'foto.jpg');
+(1, '12345', 'Asep Kopling', 1, 'asep', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', '1750399430_6062dbac42e765df42d2.jpg');
 
 -- --------------------------------------------------------
 
@@ -170,7 +179,7 @@ ALTER TABLE `tbl_kelas`
 -- AUTO_INCREMENT for table `tbl_presensi`
 --
 ALTER TABLE `tbl_presensi`
-  MODIFY `id_presensi` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_presensi` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `tbl_siswa`

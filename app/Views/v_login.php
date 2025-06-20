@@ -117,8 +117,6 @@
     </style>
 </head>
 
-<!-- ... head tetap sama seperti punyamu sebelumnya ... -->
-
 <body>
 
     <!-- loader -->

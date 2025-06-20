@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-body d-flex align-items-center">
             <div class="avatar me-3">
-                <img src="<?= base_url('foto') ?>/<?= $siswa['foto_siswa'] ?>" alt="avatar" class="imaged w64 rounded" />
+                <img src="<?= base_url('uploads/' . $siswa['foto_siswa']) ?>" alt="avatar" class="imaged w64 rounded" />
             </div>
             <div id="user-info" class="mb-1">
             <h2 id="user-name" class="text-dark"><?= $siswa['nama_siswa'] ?></h2>
