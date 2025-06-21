@@ -116,6 +116,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+    <div class="container-fluid"> <div class="row">
+        <div class="col-lg-12">
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 20px;">
+                    <strong>Berhasil!</strong> <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 20px;">
+                    <strong>Gagal!</strong> <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">

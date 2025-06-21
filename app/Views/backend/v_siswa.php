@@ -1,6 +1,8 @@
 <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title">Data Siswa</h3>
+
+        <!-- Tombol Tambah Siswa -->
         <a href="<?= base_url('Admin/tambahSiswa') ?>" class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i> Tambah Siswa
         </a>
@@ -61,6 +63,65 @@
                     </td>
                 </tr>
 
+                <!-- modal tambah -->
+      <!-- <div class="modal fade" id="modalTambah" tabindex="-1" role="dialog" aria-labelledby="modalTambahLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="<?= base_url('Admin/tambahSiswa') ?>" method="post" enctype="multipart/form-data">
+                <?= csrf_field() ?>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTambahLabel">Tambah Siswa Baru</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>NIS</label>
+                        <input type="text" name="nis" class="form-control" placeholder="Masukkan NIS" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nama Siswa</label>
+                        <input type="text" name="nama_siswa" class="form-control" placeholder="Masukkan Nama Lengkap" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kelas</label>
+                        <select name="id_kelas" class="form-control" required>
+                            <option value="">--Pilih Kelas--</option>
+                            <?php foreach ($kelas as $k) : ?>
+                                <option value="<?= $k['id_kelas'] ?>"><?= $k['kelas'] ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control" placeholder="Masukkan Username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Minimal 8 karakter" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Foto Siswa</label>
+                        <p class="text-muted small">Tipe file: JPG, PNG, WEBP. Maksimal 2MB.</p>
+                        <input type="file" name="foto_siswa" class="form-control-file" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->
+<!-- end modal tambah -->
+
                 <!-- Modal Edit -->
                 <div class="modal fade" id="modalEdit<?= $row['id_siswa'] ?>" tabindex="-1" role="dialog" aria-labelledby="modalEditLabel<?= $row['id_siswa'] ?>" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -114,7 +175,32 @@
                 </div>
                 <!-- End Modal Edit -->
                 <?php endforeach ?>
-            </tbody>
+
+                <!-- Modal Delete -->
+                <div class="modal fade" id="modalHapus<?= $row['id_siswa'] ?>" tabindex="-1" role="dialog" aria-labelledby="modalHapusLabel<?= $row['id_siswa'] ?>" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalHapusLabel<?= $row['id_siswa'] ?>">Konfirmasi Hapus</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Apakah Anda yakin ingin menghapus data siswa:</p>
+                                    <p><strong><?= esc($row['nama_siswa']) ?> (NIS: <?= esc($row['nis']) ?>)</strong>?</p>
+                                    <p class="text-danger">Tindakan ini tidak dapat diurungkan.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                    <a href="<?= base_url('Admin/hapusSiswa/' . $row['id_siswa']) ?>" class="btn btn-danger">Hapus</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </tbody>
         </table>
     </div>
 </div>
+

@@ -60,29 +60,42 @@ class Admin extends BaseController
         return view('v_template_back', $data);
     }
 
-    public function tambahSiswa()
-{
-    $foto = $this->request->getFile('foto_siswa');
+    // public function tambahSiswa()
+    // {
+    //     $fotoSiswa = $this->request->getFile('foto_siswa');
 
-    if ($foto && $foto->isValid() && !$foto->hasMoved()) {
-        $namaFoto = $foto->getRandomName();
-        $foto->move('uploads', $namaFoto);
-    } else {
-        $namaFoto = null;
-    }
+    //     // Validasi file foto
+    //     if (!$fotoSiswa || !$fotoSiswa->isValid()) {
+    //         return redirect()->back()->with('error', 'File foto tidak valid atau tidak ada file yang diunggah.');
+    //     }
 
-    $data = [
-        'nis'         => $this->request->getPost('nis'),
-        'nama_siswa'  => $this->request->getPost('nama_siswa'),
-        'id_kelas'    => $this->request->getPost('id_kelas'),
-        'username'    => $this->request->getPost('username'),
-        'password'    => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-        'foto_siswa'  => $namaFoto,
-    ];
+    //     $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    //     if (!in_array($fotoSiswa->getMimeType(), $allowedTypes)) {
+    //         return redirect()->back()->with('error', 'Tipe file harus JPEG, PNG, atau WEBP.');
+    //     }
 
-    $this->ModelSiswa->insert($data);
-    return redirect()->to(base_url('backend/v_siswa'))->with('success', 'Siswa berhasil ditambahkan');
-}
+    //     if ($fotoSiswa->getSize() > 2 * 1024 * 1024) { // maksimal 2MB
+    //         return redirect()->back()->with('error', 'Ukuran file maksimal 2MB.');
+    //     }
+
+    //     $namaFoto = $fotoSiswa->getRandomName();
+    //     $fotoSiswa->move('uploads', $namaFoto);
+
+    //     // Hash password
+    //     $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+
+    //     $data = [
+    //         'nis'         => $this->request->getPost('nis'),
+    //         'nama_siswa'  => $this->request->getPost('nama_siswa'),
+    //         'id_kelas'    => $this->request->getPost('id_kelas'),
+    //         'username'    => $this->request->getPost('username'),
+    //         'password'    => $password,
+    //         'foto_siswa'  => $namaFoto,
+    //     ];
+
+    //     $this->ModelSiswa->insert($data);
+    //     return redirect()->to(base_url('Admin/siswa'))->with('success', 'Data siswa berhasil ditambahkan');
+    // }
 
 public function editSiswa($id_siswa)
 {
@@ -120,8 +133,20 @@ public function editSiswa($id_siswa)
     ];
 
     $this->ModelSiswa->update($id_siswa, $data);
-    return redirect()->to(base_url('backend/v_siswa'))->with('success', 'Data siswa berhasil diupdate');
+    return redirect()->to(base_url('Admin/siswa'))->with('success', 'Data siswa berhasil diupdate');
 }
+
+    // Hapus siswa
+    public function hapusSiswa($id_siswa)
+    {
+        $siswa = $this->ModelSiswa->find($id_siswa);
+        if ($siswa && $siswa['foto_siswa'] && file_exists('uploads/' . $siswa['foto_siswa'])) {
+            unlink('uploads/' . $siswa['foto_siswa']);
+        }
+
+        $this->ModelSiswa->delete($id_siswa);
+        return redirect()->to(base_url('Admin/siswa'))->with('success', 'Siswa berhasil dihapus');
+    }
 
 
 }
