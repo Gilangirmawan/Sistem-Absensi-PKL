@@ -8,6 +8,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Auth extends BaseController
 {
+    protected $ModelAuth;
+
     public function __construct() {
         $this->ModelAuth = new ModelAuth();
     }

@@ -60,42 +60,91 @@ class Admin extends BaseController
         return view('v_template_back', $data);
     }
 
-    // public function tambahSiswa()
-    // {
-    //     $fotoSiswa = $this->request->getFile('foto_siswa');
+    public function tambahSiswa()
+    {
+        // Jika metode request adalah GET, tampilkan form
+        if ($this->request->getMethod() === 'get') {
+            $data = [
+                'judul' => 'Tambah Siswa',
+                'page' => 'backend/v_tambah_siswa', // Path ke view yang sudah diperbaiki
+                'kelas' => $this->ModelKelas->findAll(), // Mengambil data kelas untuk dropdown
+            ];
+            return view('v_template_back', $data);
+        }
 
-    //     // Validasi file foto
-    //     if (!$fotoSiswa || !$fotoSiswa->isValid()) {
-    //         return redirect()->back()->with('error', 'File foto tidak valid atau tidak ada file yang diunggah.');
-    //     }
+        // Jika metode request adalah POST, proses data
+        if ($this->request->getMethod() === 'post') {
+            
+            // 1. Aturan Validasi
+            $rules = [
+                'nis' => [
+                    'label' => 'NIS',
+                    'rules' => 'required|is_unique[tbl_siswa.nis]',
+                    'errors' => ['required' => '{field} wajib diisi.', 'is_unique' => '{field} sudah ada.']
+                ],
+                'nama_siswa' => [
+                    'label' => 'Nama Siswa',
+                    'rules' => 'required',
+                    'errors' => ['required' => '{field} wajib diisi.']
+                ],
+                'username' => [
+                    'label' => 'Username',
+                    'rules' => 'required|is_unique[tbl_siswa.username]',
+                    'errors' => ['required' => '{field} wajib diisi.', 'is_unique' => '{field} sudah digunakan.']
+                ],
+                'id_kelas' => [
+                    'label' => 'Kelas',
+                    'rules' => 'required',
+                    'errors' => ['required' => '{field} wajib dipilih.']
+                ],
+                'password' => [
+                    'label' => 'Password',
+                    'rules' => 'required|min_length[6]',
+                    'errors' => ['required' => '{field} wajib diisi.', 'min_length' => '{field} minimal 6 karakter.']
+                ],
+                'foto_siswa' => [
+                    'label' => 'Foto Siswa',
+                    'rules' => 'uploaded[foto_siswa]|max_size[foto_siswa,1024]|is_image[foto_siswa]|mime_in[foto_siswa,image/jpg,image/jpeg,image/png]',
+                    'errors' => [
+                        'uploaded' => '{field} wajib diunggah.',
+                        'max_size' => 'Ukuran {field} maksimal 1MB.',
+                        'is_image' => 'File yang diunggah bukan gambar.',
+                        'mime_in' => 'Format {field} harus JPG, JPEG, atau PNG.'
+                    ]
+                ]
+            ];
 
-    //     $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    //     if (!in_array($fotoSiswa->getMimeType(), $allowedTypes)) {
-    //         return redirect()->back()->with('error', 'Tipe file harus JPEG, PNG, atau WEBP.');
-    //     }
+            // 2. Jalankan Validasi
+            if (!$this->validate($rules)) {
+                // Jika validasi gagal, kembali ke form dengan pesan error
+                // withInput() akan menyimpan input user sebelumnya agar tidak hilang
+                return redirect()->back()->withInput()->with('validation', $this->validator);
+            }
 
-    //     if ($fotoSiswa->getSize() > 2 * 1024 * 1024) { // maksimal 2MB
-    //         return redirect()->back()->with('error', 'Ukuran file maksimal 2MB.');
-    //     }
+            // 3. Proses Upload Foto
+            $fotoFile = $this->request->getFile('foto_siswa');
+            $namaFoto = $fotoFile->getRandomName(); // Buat nama file acak
+            $fotoFile->move('uploads/foto_siswa', $namaFoto); // Pindahkan file ke folder public
 
-    //     $namaFoto = $fotoSiswa->getRandomName();
-    //     $fotoSiswa->move('uploads', $namaFoto);
+            // 4. Siapkan Data untuk Disimpan
+            $data = [
+                'nis'           => $this->request->getPost('nis'),
+                'nama_siswa'    => $this->request->getPost('nama_siswa'),
+                'username'      => $this->request->getPost('username'),
+                'id_kelas'      => $this->request->getPost('id_kelas'),
+                // HASHING PASSWORD! Jangan simpan password sebagai plain text.
+                'password'      => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+                'foto_siswa'    => $namaFoto,
+            ];
 
-    //     // Hash password
-    //     $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+            // 5. Simpan ke Database
+            $this->ModelSiswa->save($data);
 
-    //     $data = [
-    //         'nis'         => $this->request->getPost('nis'),
-    //         'nama_siswa'  => $this->request->getPost('nama_siswa'),
-    //         'id_kelas'    => $this->request->getPost('id_kelas'),
-    //         'username'    => $this->request->getPost('username'),
-    //         'password'    => $password,
-    //         'foto_siswa'  => $namaFoto,
-    //     ];
-
-    //     $this->ModelSiswa->insert($data);
-    //     return redirect()->to(base_url('Admin/siswa'))->with('success', 'Data siswa berhasil ditambahkan');
-    // }
+            // 6. Buat Pesan Sukses dan Redirect
+            session()->setFlashdata('success', 'Data siswa berhasil ditambahkan.');
+            return redirect()->to(base_url('Admin/siswa')); // Arahkan ke halaman daftar siswa
+        }
+    }
 
 public function editSiswa($id_siswa)
 {
