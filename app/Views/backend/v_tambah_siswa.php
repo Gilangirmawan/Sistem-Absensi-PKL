@@ -73,6 +73,6 @@
             <i class="fas fa-arrow-left"></i> Batal
         </a>
     </div>
-
+ 
     <?= form_close() ?>
 </div>
