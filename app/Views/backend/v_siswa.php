@@ -1,3 +1,9 @@
+
+<?php
+$validation = \Config\Services::validation();
+?>
+
+
 <!-- DataTables CSS & JS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -22,9 +28,9 @@
                 </select>
             </form>
 
-            <a href="<?= base_url('Admin/tambahSiswa') ?>" class="btn btn-success btn-sm">
-                <i class="fas fa-plus"></i> Tambah Siswa
-            </a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahSiswa">
+            Tambah Siswa
+            </button>
         </div>
 
         <!-- Tabel Siswa -->
@@ -56,17 +62,14 @@
                         <td><?= $s['kelas'] ?></td>
                         <td><?= $s['username'] ?></td>
                         <td class="text-center">
-                            <!-- Tombol Edit -->
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<?= $s['id_siswa'] ?>">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <!-- Tombol Delete -->
                             <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal<?= $s['id_siswa'] ?>">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     </tr>
-
                     <!-- Modal Edit -->
                     <div class="modal fade" id="editModal<?= $s['id_siswa'] ?>" tabindex="-1">
                         <div class="modal-dialog modal-md">
@@ -143,19 +146,117 @@
     </div>
 </div>
 
-<!-- DataTables Init -->
+<!-- Modal Tambah Siswa -->
+<div class="modal fade" id="tambahSiswa" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Siswa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?= base_url('admin/tambahSiswa') ?>" method="post" enctype="multipart/form-data">
+                <?= csrf_field(); ?>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nis">NIS</label>
+                                <input type="text" name="nis" id="nis" class="form-control <?= $validation?->hasError('nis') ? 'is-invalid' : ''; ?>" value="<?= old('nis') ?>">
+                                <?php if ($validation?->hasError('nis')) : ?>
+                                    <div class="invalid-feedback">
+                                        <?= $validation->getError('nis') ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nama_siswa">Nama Siswa</label>
+                                <input type="text" name="nama_siswa" id="nama_siswa" class="form-control <?= $validation?->hasError('nama_siswa') ? 'is-invalid' : ''; ?>" value="<?= old('nama_siswa') ?>">
+                                <?php if ($validation?->hasError('nama_siswa')) : ?>
+                                    <div class="invalid-feedback">
+                                        <?= $validation->getError('nama_siswa') ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username" class="form-control <?= $validation?->hasError('username') ? 'is-invalid' : ''; ?>" value="<?= old('username') ?>">
+                                <?php if ($validation?->hasError('username')) : ?>
+                                    <div class="invalid-feedback">
+                                        <?= $validation->getError('username') ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                         <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control <?= $validation?->hasError('password') ? 'is-invalid' : ''; ?>">
+                                <?php if ($validation?->hasError('password')) : ?>
+                                    <div class="invalid-feedback">
+                                        <?= $validation->getError('password') ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_kelas">Kelas</label>
+                                <select name="id_kelas" id="id_kelas" class="form-control <?= $validation?->hasError('id_kelas') ? 'is-invalid' : ''; ?>">
+                                    <option value="">-- Pilih Kelas --</option>
+                                    <?php foreach ($kelas as $k): ?>
+                                        <option value="<?= $k['id_kelas'] ?>" <?= old('id_kelas') == $k['id_kelas'] ? 'selected' : '' ?>><?= $k['kelas'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <?php if ($validation?->hasError('id_kelas')) : ?>
+                                    <div class="invalid-feedback">
+                                        <?= $validation->getError('id_kelas') ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                         <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="foto_siswa">Foto Siswa</label>
+                                <input type="file" name="foto_siswa" id="foto_siswa" class="form-control <?= $validation?->hasError('foto_siswa') ? 'is-invalid' : ''; ?>">
+                                <?php if ($validation?->hasError('foto_siswa')) : ?>
+                                    <div class="invalid-feedback">
+                                        <?= $validation->getError('foto_siswa') ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
-    $(document).ready(function() {
-        $('#tabelSiswa').DataTable({
-            "pageLength": 5,
-            "lengthChange": false,
-            "ordering": false,
-            "language": {
-                "paginate": {
-                    "previous": "<",
-                    "next": ">"
-                }
-            }
-        });
+$(document).ready(function() {
+  // Cek jika session validation ada (artinya terjadi error)
+  <?php if(session()->has('validation')): ?>
+    // Buka modal tambah secara otomatis
+    var myModal = new bootstrap.Modal(document.getElementById('tambahSiswa'), {
+      keyboard: false
     });
+    myModal.show();
+  <?php endif; ?>
+});
 </script>
+
