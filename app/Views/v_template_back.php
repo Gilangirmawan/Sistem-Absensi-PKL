@@ -68,7 +68,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="<?= base_url('Admin') ?>" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -85,7 +85,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="<?= base_url('Admin/siswa') ?>" class="nav-link active">
+                <a href="<?= base_url('Admin/siswa') ?>" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Manajemen Siswa</p>
                 </a>
