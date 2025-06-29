@@ -33,7 +33,7 @@ class Admin extends BaseController
         return view('v_template_back', $data);
     }
 
-   public function siswa()
+public function siswa()
 {
     // Ambil nilai filter dari URL (GET request)
     $filterKelasId = $this->request->getGet('kelas');
@@ -51,9 +51,10 @@ class Admin extends BaseController
     ];
     return view('v_template_back', $data);
 }
-    public function tambahSiswa()
+
+public function tambahSiswa()
 {
-    if ($this->request->getMethod() === 'post') {
+    if ($this->request->getMethod() === 'POST') {
         // --- PERUBAHAN DIMULAI DI SINI ---
         $rules = [
             'nis' => 'required|is_unique[tbl_siswa.nis]',
@@ -95,7 +96,7 @@ class Admin extends BaseController
             'nama_siswa' => $this->request->getPost('nama_siswa'),
             'username' => $this->request->getPost('username'),
             'id_kelas' => $this->request->getPost('id_kelas'),
-            'password' => hash('sha256', $this->request->getPost('password')),
+            'password' => hash('sha1', $this->request->getPost('password')),
             'foto_siswa' => $namaFoto
         ];
 
@@ -109,7 +110,7 @@ class Admin extends BaseController
     return redirect()->to(base_url('Admin/siswa'));
 }
 
-
+// edit siswa
     public function editSiswa($id_siswa)
     {
         $siswa = $this->ModelSiswa->find($id_siswa);
@@ -128,7 +129,7 @@ class Admin extends BaseController
         $passwordInput = $this->request->getPost('password');
         $password = $siswa['password'];
         if (!empty($passwordInput)) {
-            $password = password_hash($passwordInput, PASSWORD_DEFAULT);
+        $password = sha1($passwordInput);
         }
 
         $data = [

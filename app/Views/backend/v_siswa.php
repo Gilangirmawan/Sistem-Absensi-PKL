@@ -28,7 +28,7 @@ $validation = \Config\Services::validation();
                 </select>
             </form>
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahSiswa">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahSiswa"> <i class="fas fa-plus"></i>
             Tambah Siswa
             </button>
         </div>
@@ -150,11 +150,11 @@ $validation = \Config\Services::validation();
 <div class="modal fade" id="tambahSiswa" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Tambah Siswa</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="<?= base_url('admin/tambahSiswa') ?>" method="post" enctype="multipart/form-data">
+            <div class="modal-header bg-primary">
+                                        <h5 class="modal-title text-white">Tambah Siswa</h5>
+                                        <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                                    </div>
+            <form action="<?= base_url('admin/tambahSiswa') ?>" method="POST" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <div class="modal-body">
                     <div class="row">
@@ -239,7 +239,8 @@ $validation = \Config\Services::validation();
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button> -->
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
