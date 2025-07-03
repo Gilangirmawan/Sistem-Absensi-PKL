@@ -31,7 +31,6 @@ class Presensi extends BaseController
                 'judul'   => 'Absen Masuk',
                 'menu'    => 'presensi',
                 'page'    => 'presensi/v_absen_masuk',
-                'sekolah' => $this->presensiModel->dataSekolah()
             ];
         } elseif ($sudahAbsen && $sudahAbsen['jam_out'] == null) {
             // Sudah absen masuk tapi belum absen pulang
@@ -39,7 +38,6 @@ class Presensi extends BaseController
                 'judul'   => 'Absen Pulang',
                 'menu'    => 'presensi',
                 'page'    => 'presensi/v_absen_pulang',
-                'sekolah' => $this->presensiModel->dataSekolah()
             ];
         } else {
             // Sudah absen masuk dan sudah absen pulang
@@ -47,7 +45,6 @@ class Presensi extends BaseController
                 'judul'   => 'Sudah Absen',
                 'menu'    => 'presensi',
                 'page'    => 'presensi/v_sudah_absen',
-                'sekolah' => $this->presensiModel->dataSekolah()
             ];
         }
 
@@ -71,7 +68,6 @@ class Presensi extends BaseController
                 'judul'   => 'Sudah Absen',
                 'menu'    => 'presensi',
                 'page'    => 'presensi/v_sudah_absen',
-                'sekolah' => $this->presensiModel->dataSekolah()
             ];
             return view('v_template_front', $data);
         }
@@ -86,7 +82,8 @@ class Presensi extends BaseController
             'tgl_presensi' => $tanggalHariIni,
             'jam_in'       => date('H:i:s'),
             'lokasi_in'    => $lokasi,
-            'foto_in'      => $foto
+            'foto_in'      => $foto,
+            'keterangan'   => 0
         ]);
 
         // Tampilkan halaman konfirmasi sudah absen
@@ -94,7 +91,6 @@ class Presensi extends BaseController
             'judul'   => 'Presensi Masuk Berhasil',
             'menu'    => 'presensi',
             'page'    => 'presensi/v_sudah_absen',
-            'sekolah' => $this->presensiModel->dataSekolah()
         ];
         return view('v_template_front', $data);
     }
@@ -134,7 +130,8 @@ class Presensi extends BaseController
     $presensiModel->update($presensiHariIni['id_presensi'], [
         'jam_out'     => date('H:i:s'),
         'lokasi_out'  => $lokasi,
-        'foto_out'    => $foto
+        'foto_out'    => $foto,
+        'keterangan'  => 1
     ]);
 
     // Tampilkan konfirmasi sudah absen pulang
@@ -142,7 +139,6 @@ class Presensi extends BaseController
         'judul' => 'Presensi Pulang Berhasil',
         'menu' => 'presensi',
         'page' => 'presensi/v_sudah_absen',
-        'sekolah' => $presensiModel->dataSekolah()
     ];
     return view('v_template_front', $data);
 }
