@@ -82,10 +82,9 @@ class Home extends BaseController
 {
     $id_siswa = session()->get('id_siswa');
     $tanggalMulai = new \DateTime(TGL_MULAI_PKL);
-    $tanggalHariIni = new \DateTime(); // hari ini
+    $tanggalHariIni = new \DateTime();
 
     $modelPresensi = new ModelPresensi();
-
     $events = [];
 
     $interval = new \DateInterval('P1D');
@@ -94,27 +93,32 @@ class Home extends BaseController
     foreach ($periode as $tanggal) {
         $tanggalStr = $tanggal->format('Y-m-d');
 
-        // Abaikan weekend
+        // Lewati weekend (6 = Sabtu, 7 = Minggu)
         if (in_array($tanggal->format('N'), [6, 7])) {
             continue;
         }
 
-        // Cek apakah ada data presensi
         $presensi = $modelPresensi
             ->where('id_siswa', $id_siswa)
             ->where('tgl_presensi', $tanggalStr)
             ->first();
 
         if ($presensi) {
-            if (!empty($presensi['keterangan']) && in_array(strtolower($presensi['keterangan']), ['izin', 'sakit'])) {
-                $color = 'orange';
-                $title = ucfirst($presensi['keterangan']);
-            } elseif (!empty($presensi['jam_in']) && !empty($presensi['jam_out'])) {
-                $color = 'green';
-                $title = 'Hadir';
-            } else {
-                $color = 'orange'; // default ke izin/sakit jika tidak lengkap
-                $title = 'Tidak Lengkap';
+            // Gunakan nilai numerik dari field 'keterangan'
+            switch ((int)$presensi['keterangan']) {
+                case 1:
+                    $color = 'green';
+                    $title = 'Hadir';
+                    break;
+                case 2:
+                    $color = 'orange';
+                    $title = 'Izin/Sakit';
+                    break;
+                case 0:
+                default:
+                    $color = 'orange';
+                    $title = 'Tidak Lengkap';
+                    break;
             }
         } else {
             $color = 'red';
@@ -137,6 +141,7 @@ class Home extends BaseController
 
     return view('v_template_front', $data);
 }
+
 
 
 

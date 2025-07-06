@@ -55,7 +55,6 @@ public function siswa()
 public function tambahSiswa()
 {
     if ($this->request->getMethod() === 'POST') {
-        // --- PERUBAHAN DIMULAI DI SINI ---
         $rules = [
             'nis' => 'required|is_unique[tbl_siswa.nis]',
             'nama_siswa' => 'required',
@@ -72,7 +71,6 @@ public function tambahSiswa()
                 ]
             ]
         ];
-        // --- PERUBAHAN SELESAI DI SINI ---
 
         if (!$this->validate($rules)) {
             // Set pesan error untuk ditampilkan
@@ -164,6 +162,74 @@ public function tambahSiswa()
     return redirect()->to(base_url('Admin/siswa'));
 }
 
+public function kelas()
+{
+    $data = [
+        'judul' => 'Manajemen Kelas',
+        'menu' => 'kelas',
+        'page'  => 'backend/v_kelas',
+        'kelas' => $this->ModelKelas->findAll()
+    ];
 
+    return view('v_template_back', $data);
+}
+
+// Tambah kelas
+public function tambahKelas()
+{
+    $rules = [
+        'kelas' => 'required|is_unique[tbl_kelas.kelas]'
+    ];
+
+    if (!$this->validate($rules)) {
+        return redirect()->back()->withInput()->with('validation', $this->validator);
+    }
+
+    $this->ModelKelas->insert([
+        'kelas' => $this->request->getPost('kelas')
+    ]);
+
+    session()->setFlashdata('success', 'Data kelas berhasil ditambahkan.');
+    return redirect()->to(base_url('Admin/kelas'));
+}
+
+// Edit kelas
+public function editKelas($id_kelas)
+{
+    $kelasBaru = $this->request->getPost('kelas');
+
+    // Cek jika nama kelas diubah dan sama dengan data lain
+    $existing = $this->ModelKelas
+        ->where('kelas', $kelasBaru)
+        ->where('id_kelas !=', $id_kelas)
+        ->first();
+
+    if ($existing) {
+        session()->setFlashdata('error', 'Nama kelas sudah digunakan.');
+        return redirect()->to(base_url('Admin/kelas'));
+    }
+
+    $this->ModelKelas->update($id_kelas, [
+        'kelas' => $kelasBaru
+    ]);
+
+    session()->setFlashdata('success', 'Data kelas berhasil diperbarui.');
+    return redirect()->to(base_url('Admin/kelas'));
+}
+
+// Hapus kelas
+public function hapusKelas($id_kelas)
+{
+    // Optional: Cek jika masih digunakan oleh siswa
+    $siswa = $this->ModelSiswa->where('id_kelas', $id_kelas)->countAllResults();
+    if ($siswa > 0) {
+        session()->setFlashdata('error', 'Kelas tidak dapat dihapus karena masih digunakan oleh data siswa.');
+        return redirect()->to(base_url('Admin/kelas'));
+    }
+
+    $this->ModelKelas->delete($id_kelas);
+    session()->setFlashdata('success', 'Data kelas berhasil dihapus.');
+    return redirect()->to(base_url('Admin/kelas'));
+}
 
 }
