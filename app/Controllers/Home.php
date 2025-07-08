@@ -43,10 +43,9 @@ class Home extends BaseController
         $siswaId = session()->get('id_siswa');
         if (!$siswaId) {
             return redirect()->to('/')->with('error', 'Session tidak ditemukan. Silakan login ulang.');
-        }
+        } 
 
         $file = $this->request->getFile('foto_siswa');
-
         if (!$file || !$file->isValid()) {
             return redirect()->back()->with('error', 'File tidak valid atau tidak ada file yang diunggah.');
         }
