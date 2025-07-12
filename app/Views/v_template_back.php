@@ -100,9 +100,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </li>
           <li class="nav-item">
             <a href="<?= base_url('Admin/presensiSiswa') ?>" class="<?= ($menu == 'presensi') ? 'active' : '' ?> nav-link">
-              <i class="nav-icon fas fa-th"></i>
+              <i class="nav-icon fas fa-table"></i>
               <p>
-                Simple Link
+                Detail Presensi Siswa
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="<?= base_url('Admin/rekapPresensi') ?>" class="<?= ($menu == 'rekap') ? 'active' : '' ?> nav-link">
+              <i class="nav-icon fas fa-save"></i>
+              <p>
+                Rekap Presensi Siswa
               </p>
             </a>
           </li>

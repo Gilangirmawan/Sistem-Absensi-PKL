@@ -342,5 +342,13 @@ public function updateKeterangan()
     return redirect()->back()->with('success', 'Keterangan berhasil diperbarui.');
 }
 
-
+public function rekapPresensi(): string
+    {
+        $data = [
+            'judul' => 'Rekap Absensi',
+            'menu' => 'rekap',
+            'page' => 'backend/v_rekap',
+        ];
+        return view('v_template_back', $data);
+    }
 }
