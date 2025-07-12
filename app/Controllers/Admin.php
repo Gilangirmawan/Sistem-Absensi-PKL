@@ -104,7 +104,7 @@ public function tambahSiswa()
         return redirect()->to(base_url('Admin/siswa'));
     }
 
-    // Jika diakses via GET, redirect saja
+ 
     return redirect()->to(base_url('Admin/siswa'));
 }
 
@@ -231,5 +231,116 @@ public function hapusKelas($id_kelas)
     session()->setFlashdata('success', 'Data kelas berhasil dihapus.');
     return redirect()->to(base_url('Admin/kelas'));
 }
+
+public function presensiSiswa()
+{
+    $filterKelas = $this->request->getGet('kelas');
+
+    $data = [
+        'judul'       => 'Presensi Siswa',
+        'menu'        => 'presensi',
+        'page'        => 'backend/detail-presensi/v_siswa_presensi',
+        'kelas'       => $this->ModelKelas->findAll(),
+        'filterKelas' => $filterKelas,
+        'siswa'       => $this->ModelSiswa->getSiswaWithKelas($filterKelas)
+    ];
+
+    return view('v_template_back', $data);
+}
+
+public function detailPresensi($id_siswa)
+{
+    helper('date');
+    $modelSiswa = $this->ModelSiswa->find($id_siswa);
+
+    if (!$modelSiswa) {
+        throw new \CodeIgniter\Exceptions\PageNotFoundException('Siswa tidak ditemukan');
+    }
+
+    $tanggalMulai = new \DateTime(TGL_MULAI_PKL);
+    $tanggalHariIni = new \DateTime(); // hari ini
+
+    $interval = new \DateInterval('P1D');
+    $periode = new \DatePeriod($tanggalMulai, $interval, $tanggalHariIni->modify('+1 day'));
+
+    $modelPresensi = new \App\Models\ModelPresensi();
+
+    $presensi = [];
+
+    foreach ($periode as $tanggal) {
+        if (in_array($tanggal->format('N'), [6, 7])) {
+            continue; // skip weekend
+        }
+
+        $tglStr = $tanggal->format('Y-m-d');
+        $dataPresensi = $modelPresensi
+            ->where('id_siswa', $id_siswa)
+            ->where('tgl_presensi', $tglStr)
+            ->first();
+
+        if ($dataPresensi) {
+            $presensi[] = [
+                'tanggal'    => $tglStr,
+                'jam_in'     => $dataPresensi['jam_in'],
+                'jam_out'    => $dataPresensi['jam_out'],
+                'keterangan' => intval($dataPresensi['keterangan']),
+            ];
+        } else {
+            $presensi[] = [
+                'tanggal'    => $tglStr,
+                'jam_in'     => null,
+                'jam_out'    => null,
+                'keterangan' => 0, // alfa
+            ];
+        }
+    }
+
+    $data = [
+        'judul'   => 'Detail Presensi Siswa',
+        'menu'    => 'presensi',
+        'page'    => 'backend/detail-presensi/v_detail_presensi',
+        'siswa'   => $modelSiswa,
+        'presensi'=> $presensi
+    ];
+
+    return view('v_template_back', $data);
+}
+
+public function updateKeterangan()
+{
+    $id_siswa     = $this->request->getPost('id_siswa');
+    $tgl_presensi = $this->request->getPost('tgl_presensi');
+    $keterangan   = $this->request->getPost('keterangan');
+
+    // Validasi sederhana
+    if (!$id_siswa || !$tgl_presensi || !$keterangan) {
+        return redirect()->back()->with('error', 'Data tidak lengkap.');
+    }
+
+    $modelPresensi = new \App\Models\ModelPresensi();
+
+    // Cek apakah presensi sudah ada untuk tanggal itu
+    $dataPresensi = $modelPresensi
+        ->where('id_siswa', $id_siswa)
+        ->where('tgl_presensi', $tgl_presensi)
+        ->first();
+
+    if ($dataPresensi) {
+        // Update keterangan
+        $modelPresensi->update($dataPresensi['id_presensi'], [
+            'keterangan' => $keterangan
+        ]);
+    } else {
+        // Insert baru dengan hanya keterangan
+        $modelPresensi->insert([
+            'id_siswa'     => $id_siswa,
+            'tgl_presensi' => $tgl_presensi,
+            'keterangan'   => $keterangan
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Keterangan berhasil diperbarui.');
+}
+
 
 }

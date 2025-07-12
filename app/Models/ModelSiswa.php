@@ -13,14 +13,16 @@ class ModelSiswa extends Model
 
     // --- TAMBAHKAN FUNGSI BARU DI SINI ---
     public function getSiswaWithKelas($id_kelas = null)
-    {
-        $builder = $this->db->table('tbl_siswa');
-        $builder->join('tbl_kelas', 'tbl_kelas.id_kelas = tbl_siswa.id_kelas');
+{
+    $builder = $this->select('tbl_siswa.*, tbl_kelas.kelas')
+                    ->join('tbl_kelas', 'tbl_kelas.id_kelas = tbl_siswa.id_kelas');
 
-        if ($id_kelas) {
-            $builder->where('tbl_siswa.id_kelas', $id_kelas);
-        }
-
-        return $builder->get()->getResultArray();
+    if ($id_kelas) {
+        $builder->where('tbl_siswa.id_kelas', $id_kelas);
     }
+
+    return $builder->orderBy('tbl_siswa.nama_siswa', 'ASC')->findAll(); //urut sesuai abjad nama
+
+}
+
 }

@@ -99,7 +99,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="<?= base_url('Admin/presensiSiswa') ?>" class="<?= ($menu == 'presensi') ? 'active' : '' ?> nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Simple Link
