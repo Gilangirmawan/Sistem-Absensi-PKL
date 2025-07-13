@@ -32,6 +32,9 @@ $routes->setAutoRoute(true);
 //$routes->get('/', 'Home::index');
 $routes->get('/', 'Auth::index');
 $routes->get('/loginAdmin', 'Auth::loginAdmin');
+$routes->get('Admin/exportRekapXLSX', 'Admin::exportRekapXLSX');
+
+
 
 
 /*

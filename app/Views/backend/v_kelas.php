@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<div class="card card-primary card-outline" style="min-height: 600px; width: 100%;">
+<div class="card card-primary card-outline mt-3" style="min-height: 600px; width: 100%;">
     <div class="card-header">
         <h1 class="card-title text">Data Kelas</h1>
     </div>

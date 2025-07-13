@@ -6,6 +6,11 @@ use App\Models\ModelAdmin;
 use App\Controllers\BaseController;
 use App\Models\ModelSiswa;
 use App\Models\ModelKelas;
+use App\Models\ModelPresensi;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use CodeIgniter\HTTP\Files\UploadedFile;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -14,11 +19,13 @@ class Admin extends BaseController
     protected ModelAdmin $ModelAdmin;
     protected ModelSiswa $ModelSiswa;
     protected ModelKelas $ModelKelas;
+    protected ModelPresensi $ModelPresensi;
 
     public function __construct() {
         $this->ModelAdmin = new ModelAdmin();
         $this->ModelSiswa = new ModelSiswa();
         $this->ModelKelas = new ModelKelas();
+        $this->ModelPresensi = new ModelPresensi();
         helper(['form', 'url']);
     }
     
@@ -252,7 +259,8 @@ public function detailPresensi($id_siswa)
 {
     helper('date');
     $modelSiswa = $this->ModelSiswa->find($id_siswa);
-
+    $ModelPresensi = $this->ModelPresensi->find($id_siswa);
+    
     if (!$modelSiswa) {
         throw new \CodeIgniter\Exceptions\PageNotFoundException('Siswa tidak ditemukan');
     }
@@ -263,8 +271,6 @@ public function detailPresensi($id_siswa)
     $interval = new \DateInterval('P1D');
     $periode = new \DatePeriod($tanggalMulai, $interval, $tanggalHariIni->modify('+1 day'));
 
-    $modelPresensi = new \App\Models\ModelPresensi();
-
     $presensi = [];
 
     foreach ($periode as $tanggal) {
@@ -273,7 +279,7 @@ public function detailPresensi($id_siswa)
         }
 
         $tglStr = $tanggal->format('Y-m-d');
-        $dataPresensi = $modelPresensi
+        $dataPresensi = $ModelPresensi
             ->where('id_siswa', $id_siswa)
             ->where('tgl_presensi', $tglStr)
             ->first();
@@ -317,22 +323,21 @@ public function updateKeterangan()
         return redirect()->back()->with('error', 'Data tidak lengkap.');
     }
 
-    $modelPresensi = new \App\Models\ModelPresensi();
 
     // Cek apakah presensi sudah ada untuk tanggal itu
-    $dataPresensi = $modelPresensi
+    $dataPresensi = $this->ModelPresensi
         ->where('id_siswa', $id_siswa)
         ->where('tgl_presensi', $tgl_presensi)
         ->first();
 
     if ($dataPresensi) {
         // Update keterangan
-        $modelPresensi->update($dataPresensi['id_presensi'], [
+        $this->ModelPresensi->update($dataPresensi['id_presensi'], [
             'keterangan' => $keterangan
         ]);
     } else {
         // Insert baru dengan hanya keterangan
-        $modelPresensi->insert([
+        $this->ModelPresensi->insert([
             'id_siswa'     => $id_siswa,
             'tgl_presensi' => $tgl_presensi,
             'keterangan'   => $keterangan
@@ -342,13 +347,201 @@ public function updateKeterangan()
     return redirect()->back()->with('success', 'Keterangan berhasil diperbarui.');
 }
 
-public function rekapPresensi(): string
-    {
-        $data = [
-            'judul' => 'Rekap Absensi',
-            'menu' => 'rekap',
-            'page' => 'backend/v_rekap',
-        ];
-        return view('v_template_back', $data);
+public function rekapPresensi()
+{
+    $kelas = $this->ModelKelas->findAll();
+
+    $filterKelas = $this->request->getGet('kelas');
+    $tanggalMulai = TGL_MULAI_PKL;
+    $tanggalAkhir = $this->request->getGet('tanggal_akhir');
+
+    $rekapData = [];
+
+    if ($filterKelas && $tanggalAkhir) {
+        $siswa = $this->ModelSiswa->getSiswaWithKelas($filterKelas);
+
+        foreach ($siswa as $s) {
+            $dataPresensi = $this->ModelPresensi
+                ->where('id_siswa', $s['id_siswa'])
+                ->where('tgl_presensi >=', $tanggalMulai)
+                ->where('tgl_presensi <=', $tanggalAkhir)
+                ->findAll();
+
+            // Hitung total hadir, izin, alfa
+            $hadir = 0; $izin = 0; $alfa = 0;
+
+            $periode = new \DatePeriod(
+                new \DateTime($tanggalMulai),
+                new \DateInterval('P1D'),
+                (new \DateTime($tanggalAkhir))->modify('+1 day')
+            );
+
+            foreach ($periode as $tanggal) {
+                if (in_array($tanggal->format('N'), [6,7])) continue; // Skip weekend
+
+                $presensiTanggal = array_filter($dataPresensi, function($p) use ($tanggal) {
+                    return $p['tgl_presensi'] == $tanggal->format('Y-m-d');
+                });
+
+                if ($presensiTanggal) {
+                    $p = array_values($presensiTanggal)[0];
+                    if ($p['keterangan'] == 1) $hadir++;
+                    elseif ($p['keterangan'] == 2) $izin++;
+                } else {
+                    $alfa++;
+                }
+            }
+
+            $rekapData[] = [
+                'nis' => $s['nis'],
+                'nama' => $s['nama_siswa'],
+                'kelas' => $s['kelas'],
+                'hadir' => $hadir,
+                'izin' => $izin,
+                'alfa' => $alfa,
+            ];
+        }
     }
+
+    $data = [
+        'judul' => 'Rekap Absensi',
+        'menu' => 'rekap',
+        'page' => 'backend/v_rekap',
+        'kelas' => $kelas,
+        'filterKelas' => $filterKelas,
+        'tanggalMulai' => $tanggalMulai,
+        'tanggalAkhir' => $tanggalAkhir,
+        'rekap' => $rekapData
+    ];
+
+    return view('v_template_back', $data);
+}
+
+public function exportRekapXLSX()
+{
+    $filterKelas = $this->request->getGet('kelas');
+    $tanggalMulai = TGL_MULAI_PKL; // Ambil dari global constant
+    $tanggalAkhir = $this->request->getGet('tanggal_akhir');
+
+    if (!$filterKelas || !$tanggalAkhir) {
+        return redirect()->back()->with('error', 'Filter kelas dan tanggal akhir wajib diisi.');
+    }
+
+    $siswa = $this->ModelSiswa->getSiswaWithKelas($filterKelas);
+
+    // Siapkan data rekap
+    $rekapData = [];
+    foreach ($siswa as $s) {
+        $dataPresensi = $this->ModelPresensi
+            ->where('id_siswa', $s['id_siswa'])
+            ->where('tgl_presensi >=', $tanggalMulai)
+            ->where('tgl_presensi <=', $tanggalAkhir)
+            ->findAll();
+
+        $hadir = 0; $izin = 0; $alfa = 0;
+
+        $periode = new \DatePeriod(
+            new \DateTime($tanggalMulai),
+            new \DateInterval('P1D'),
+            (new \DateTime($tanggalAkhir))->modify('+1 day')
+        );
+
+        foreach ($periode as $tanggal) {
+            if (in_array($tanggal->format('N'), [6,7])) continue; // Skip weekend
+
+            $presensiTanggal = array_filter($dataPresensi, function($p) use ($tanggal) {
+                return $p['tgl_presensi'] == $tanggal->format('Y-m-d');
+            });
+
+            if ($presensiTanggal) {
+                $p = array_values($presensiTanggal)[0];
+                if ($p['keterangan'] == 1) $hadir++;
+                elseif ($p['keterangan'] == 2) $izin++;
+            } else {
+                $alfa++;
+            }
+        }
+
+        $rekapData[] = [
+            'nis' => $s['nis'],
+            'nama' => $s['nama_siswa'],
+            'kelas' => $s['kelas'],
+            'hadir' => $hadir,
+            'izin' => $izin,
+            'alfa' => $alfa,
+        ];
+    }
+
+    // Buat Spreadsheet
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Set judul
+    $sheet->setCellValue('A1', 'REKAP PRESENSI SISWA');
+    $sheet->mergeCells('A1:F1');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+    // Header
+    $header = ['No', 'NIS', 'Nama Siswa', 'Kelas', 'Hadir', 'Izin/Sakit', 'Alfa'];
+    $col = 'A';
+    foreach ($header as $h) {
+        $sheet->setCellValue($col . '3', $h);
+        $col++;
+    }
+
+    // Styling Header
+    $styleHeader = [
+    'font' => [
+        'bold' => true,
+        'color' => ['rgb' => 'FFFFFF']
+    ],
+    'fill' => [
+        'fillType' => Fill::FILL_SOLID,
+        'startColor' => ['rgb' => '4e73df']
+    ],
+    'alignment' => ['horizontal' => 'center'],
+    'borders' => [
+        'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+    ]
+];
+
+
+    $sheet->getStyle('A3:G3')->applyFromArray($styleHeader);
+
+    // Isi data
+    $no = 1;
+    $row = 4;
+    foreach ($rekapData as $r) {
+        $sheet->setCellValue('A' . $row, $no++);
+        $sheet->setCellValue('B' . $row, $r['nis']);
+        $sheet->setCellValue('C' . $row, $r['nama']);
+        $sheet->setCellValue('D' . $row, $r['kelas']);
+        $sheet->setCellValue('E' . $row, $r['hadir']);
+        $sheet->setCellValue('F' . $row, $r['izin']);
+        $sheet->setCellValue('G' . $row, $r['alfa']);
+
+        $row++;
+    }
+
+    // Set border seluruh tabel
+    $sheet->getStyle('A3:G' . ($row-1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+    // Auto-size kolom
+    foreach (range('A', 'G') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // Outputkan sebagai file download
+    $filename = 'Rekap_Presensi_' . date('Ymd_His') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+    exit;
+}
+
 }
