@@ -109,67 +109,79 @@ class Home extends BaseController
 
 
     public function kalender()
-{
-    $id_siswa = session()->get('id_siswa');
-    $tanggalMulai = new \DateTime(TGL_MULAI_PKL);
-    $tanggalHariIni = new \DateTime();
+    {
+        $id_siswa = session()->get('id_siswa');
+        $tanggalMulai = new \DateTime(TGL_MULAI_PKL);
+        $tanggalHariIni = new \DateTime();
 
-    $modelPresensi = new ModelPresensi();
-    $events = [];
+        $modelPresensi = new ModelPresensi();
+        $events = [];
 
-    $interval = new \DateInterval('P1D');
-    $periode = new \DatePeriod($tanggalMulai, $interval, $tanggalHariIni->modify('+1 day'));
+        $interval = new \DateInterval('P1D');
+        $periode = new \DatePeriod($tanggalMulai, $interval, $tanggalHariIni->modify('+1 day'));
 
-    foreach ($periode as $tanggal) {
-        $tanggalStr = $tanggal->format('Y-m-d');
+        foreach ($periode as $tanggal) {
+            $tanggalStr = $tanggal->format('Y-m-d');
 
-        // Lewati weekend (6 = Sabtu, 7 = Minggu)
-        if (in_array($tanggal->format('N'), [6, 7])) {
-            continue;
-        }
-
-        $presensi = $modelPresensi
-            ->where('id_siswa', $id_siswa)
-            ->where('tgl_presensi', $tanggalStr)
-            ->first();
-
-        if ($presensi) {
-            // Gunakan nilai numerik dari field 'keterangan'
-            switch ((int)$presensi['keterangan']) {
-                case 1:
-                    $color = 'green';
-                    $title = 'Hadir';
-                    break;
-                case 2:
-                    $color = 'orange';
-                    $title = 'Izin/Sakit';
-                    break;
-                case 0:
-                default:
-                    $color = 'orange';
-                    $title = 'Tidak Lengkap';
-                    break;
+            // Lewati weekend (6 = Sabtu, 7 = Minggu)
+            if (in_array($tanggal->format('N'), [6, 7])) {
+                continue;
             }
-        } else {
-            $color = 'red';
-            $title = 'Alfa';
+
+            $presensi = $modelPresensi
+                ->where('id_siswa', $id_siswa)
+                ->where('tgl_presensi', $tanggalStr)
+                ->first();
+
+            if ($presensi) {
+                // Gunakan nilai numerik dari field 'keterangan'
+                switch ((int)$presensi['keterangan']) {
+                    case 1:
+                        $color = 'green';
+                        $title = 'Hadir';
+                        break;
+                    case 2:
+                        $color = 'orange';
+                        $title = 'Izin/Sakit';
+                        break;
+                    case 0:
+                    default:
+                        $color = 'orange';
+                        $title = 'Tidak Lengkap';
+                        break;
+                }
+            } else {
+                $color = 'red';
+                $title = 'Alfa';
+            }
+
+            $events[] = [
+                'title' => $title,
+                'start' => $tanggalStr,
+                'color' => $color,
+            ];
         }
 
-        $events[] = [
-            'title' => $title,
-            'start' => $tanggalStr,
-            'color' => $color,
+        $data = [
+            'judul' => 'Kalender Kehadiran',
+            'menu' => 'kalender',
+            'page' => 'v_kalender',
+            'events' => json_encode($events),
         ];
+
+        return view('v_template_front', $data);
     }
 
-    $data = [
-        'judul' => 'Kalender Kehadiran',
-        'menu' => 'kalender',
-        'page' => 'v_kalender',
-        'events' => json_encode($events),
-    ];
+    public function dokumen()
+    {
+         $data = [
+            'judul' => 'Dokumen',
+            'menu' => 'docs',
+            'page' => 'v_dokumen',
+            // 'siswa' => $this->ModelHome->dataSiswa(),
+        ];
+        return view('v_template_front', $data);
+    }
 
-    return view('v_template_front', $data);
-}
 
 }

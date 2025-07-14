@@ -69,9 +69,9 @@
                 </div>
             </div>
         </a>
-        <a href="#" class="item">
+        <a href="<?= base_url('Home/dokumen') ?>" class="item <?= $menu == 'docs' ? 'active' : '' ?>">
             <div class="col">
-                <i class="fas fa-file-alt fa-3x text-dark"></i>
+                <i class="fas fa-file-alt fa-3x <?= $menu == 'docs' ? '' : 'text-dark' ?>"></i>
                 <strong>Docs</strong>
             </div>
         </a>
