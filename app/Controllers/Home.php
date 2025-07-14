@@ -16,16 +16,47 @@ class Home extends BaseController
         $this->ModelPresensi = new ModelPresensi();
     }
 
-    public function index(): string
-    {
-        $data = [
-            'judul' => 'Home',
-            'menu' => 'home',
-            'page' => 'v_home',
-            'siswa' => $this->ModelHome->dataSiswa(),
-        ];
-        return view('v_template_front', $data);
+    public function index()
+{
+    $id_siswa = session()->get('id_siswa');
+
+    $tanggalMulai = new \DateTime(TGL_MULAI_PKL);
+    $tanggalHariIni = new \DateTime();
+
+    $interval = new \DateInterval('P1D');
+    $periode = new \DatePeriod($tanggalMulai, $interval, $tanggalHariIni->modify('+1 day'));
+
+    $hadir = 0; $izin = 0; $alfa = 0;
+
+    foreach ($periode as $tanggal) {
+        if (in_array($tanggal->format('N'), [6,7])) continue; // Skip weekend
+
+        $presensi = $this->ModelPresensi
+            ->where('id_siswa', $id_siswa)
+            ->where('tgl_presensi', $tanggal->format('Y-m-d'))
+            ->first();
+
+        if ($presensi) {
+            if ($presensi['keterangan'] == 1) $hadir++;
+            elseif ($presensi['keterangan'] == 2) $izin++;
+        } else {
+            $alfa++;
+        }
     }
+
+    $data = [
+        'judul' => 'Home',
+        'menu' => 'home',
+        'hadir' => $hadir,
+        'izin'  => $izin,
+        'alfa'  => $alfa,
+        'page'  => 'v_home',
+        'siswa' => $this->ModelHome->dataSiswa(),
+    ];
+
+    return view('v_template_front', $data);
+}
+
 
     public function profile(): string
     {

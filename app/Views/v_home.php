@@ -21,7 +21,7 @@
 
     <div class="rekappresence mt-1">
         <div class="col">
-            <canvas id="myChart" style="min-height: 200px; height: 200px; max-height: 200px; max-width: 100%;"></canvas>
+            <canvas id="myChart" style="min-height: 70px; height: 70px; max-height: 70px; max-width: 100%;"></canvas>
         </div>
     </div>
 
@@ -37,7 +37,7 @@
                             </div>
                             <div class="presencedetail">
                                 <h4 class="rekappresencetitle">Hadir</h4>
-                                <span class="rekappresencedetail">0 Hari</span>
+                                <span class="rekappresencedetail"><?= $hadir ?> Hari</span>
                             </div>
                         </div>
                     </div>
@@ -51,8 +51,8 @@
                                 <i class="fas fa-info"></i>
                             </div>
                             <div class="presencedetail">
-                                <h4 class="rekappresencetitle">Izin</h4>
-                                <span class="rekappresencedetail">0 Hari</span>
+                                <h4 class="rekappresencetitle">Izin/Sakit</h4>
+                                <span class="rekappresencedetail"><?= $izin ?> Hari</span>
                             </div>
                         </div>
                     </div>
@@ -64,27 +64,12 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="presencecontent">
-                            <div class="iconpresence danger">
-                                <i class="fas fa-sad-tear"></i>
-                            </div>
-                            <div class="presencedetail">
-                                <h4 class="rekappresencetitle">Sakit</h4>
-                                <span class="rekappresencedetail">0 Hari</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="presencecontent">
                             <div class="iconpresence warning">
                                 <i class="fa fa-clock"></i>
                             </div>
                             <div class="presencedetail">
-                                <h4 class="rekappresencetitle">Tanpa Keterangan</h4>
-                                <span class="rekappresencedetail">0 Hari</span>
+                                <h4 class="rekappresencetitle">Alfa</h4>
+                                <span class="rekappresencedetail"><?= $alfa ?> Hari</span>
                             </div>
                         </div>
                     </div>
@@ -92,9 +77,9 @@
             </div>
         </div>
     </div>
-    <div class="presencetab mt-2">
-        <div class="tab-content mt-2" style="margin-bottom: 100px">
-            <div class="tab-content mt-2" style="margin-bottom: 100px">
+    <div class="presencetab mt-5">
+        <div class="tab-content mt-2">
+            <div class="tab-content mt-2">
             <a href="<?= base_url('Auth/logOut') ?>" class="btn btn-danger btn-lg btn btn-block"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div> 
         </div>
