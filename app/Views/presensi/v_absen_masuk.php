@@ -17,7 +17,7 @@
         .my_camera,
         .my_camera video {
             display: inline-block;
-            width: 100% !imprtant;
+            width: 100% !important;
             margin: auto;
             height: auto !important;
             border-radius: 15px;
