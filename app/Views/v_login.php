@@ -29,6 +29,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
         }
 
         .login-card {
@@ -114,6 +115,40 @@
                 max-width: 100%;
             }
         }
+
+        .login-admin-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ffffff;
+    color: #2980b9;
+    border: 2px solid #ffffff;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.login-admin-btn:hover {
+    background-color: #2980b9;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+@media (max-width: 576px) {
+    .login-admin-btn {
+        top: 10px;
+        right: 10px;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+}
+
+
     </style>
 </head>
 
@@ -124,6 +159,8 @@
         <div class="spinner-border text-primary" role="status"></div>
     </div>
     <!-- * loader -->
+
+    <a href="<?= base_url('index.php/loginAdmin') ?>" class="login-admin-btn">Login Admin</a>
 
     <!-- App Capsule -->
     <div id="appCapsule" class="pt-0">
