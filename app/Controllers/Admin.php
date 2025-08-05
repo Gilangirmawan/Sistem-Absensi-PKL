@@ -259,7 +259,7 @@ public function detailPresensi($id_siswa)
 {
     helper('date');
     $modelSiswa = $this->ModelSiswa->find($id_siswa);
-    $ModelPresensi = $this->ModelPresensi->find($id_siswa);
+    $ModelPresensi = $this->ModelPresensi;
     
     if (!$modelSiswa) {
         throw new \CodeIgniter\Exceptions\PageNotFoundException('Siswa tidak ditemukan');

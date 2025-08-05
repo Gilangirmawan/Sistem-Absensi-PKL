@@ -4,7 +4,7 @@
     "require": {
         "php": "^8.1",
         "codeigniter4/framework": "^4.4",
-        "phpoffice/phpspreadsheet": "1.29"
+        "phpoffice/phpspreadsheet": "^4.5"
     },
     "autoload": {
         "psr-4": {
