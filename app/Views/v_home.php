@@ -1,5 +1,5 @@
 <div class="section bg-primary" id="user-section">
-<div class="px-2 "><marquee class="py-3" scrollamount="12"><h1 class="text-light ">KALIAN LAGI MAGER KELUAR TAPI PENGEN NGE-PRINT LAPORAN, PROPOSAL, DLL? NG PRINTING SOLUSINYA!!! BISA KIRIM KE SELURUH INDONESIA TANPA BIAYA ONGKIR!</h1></marquee></div>
+<div class="px-2 "><marquee class="py-3" scrollamount="12"><h1 class="text-light ">Selamat Datang di Sistem Absensi</h1></marquee></div>
 </div>
 
 <div class="section" id="menu-section">
