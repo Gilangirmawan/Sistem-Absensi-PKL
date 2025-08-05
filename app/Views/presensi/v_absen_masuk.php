@@ -14,14 +14,14 @@
     <div class="col">
 
         <style>
-            .my_camera,
-            .my_camera video {
-                display: inline-block;
-                width: 100% !important;
-                margin: auto;
-                height: auto !important;
-                border-radius: 15px;
-            }
+        .my_camera,
+        .my_camera video {
+            display: inline-block;
+            width: 100% !important;
+            margin: auto;
+            height: auto !important;
+            border-radius: 15px;
+        }
         </style>
 
         <!-- Form untuk submit absen -->
@@ -41,42 +41,42 @@
 
 <!-- Webcam & Lokasi -->
 <script>
-    // Set webcam
-    Webcam.set({
-        width: 420,
-        height: 320,
-        image_format: 'jpeg',
-        jpeg_quality: 90,
+// Set webcam
+Webcam.set({
+    width: 420,
+    height: 320,
+    image_format: 'jpeg',
+    jpeg_quality: 90,
+});
+Webcam.attach('.my_camera');
+
+// Tangkap lokasi
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+} else {
+    alert("Geolocation is not supported by this browser.");
+}
+
+function showPosition(position) {
+    let lokasiInput = document.getElementById("lokasi");
+    lokasiInput.value = position.coords.latitude + "," + position.coords.longitude;
+
+    // Tampilkan peta
+    let map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 19);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+}
+
+// Tombol absen: capture webcam + submit
+document.getElementById('btnAbsenMasuk').addEventListener('click', function() {
+    Webcam.snap(function(data_uri) {
+        document.getElementById('image').value = data_uri;
+        // Submit form
+        document.querySelector('form').submit();
     });
-    Webcam.attach('.my_camera');
-
-    // Tangkap lokasi
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        alert("Geolocation is not supported by this browser.");
-    }
-
-    function showPosition(position) {
-        let lokasiInput = document.getElementById("lokasi");
-        lokasiInput.value = position.coords.latitude + "," + position.coords.longitude;
-
-        // Tampilkan peta
-        let map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 19);
-
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
-    }
-
-    // Tombol absen: capture webcam + submit
-    document.getElementById('btnAbsenMasuk').addEventListener('click', function () {
-        Webcam.snap(function (data_uri) {
-            document.getElementById('image').value = data_uri;
-            // Submit form
-            document.querySelector('form').submit();
-        });
-    });
+});
 </script>
